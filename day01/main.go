@@ -17,6 +17,7 @@ var (
 	name string
 	age  int
 	isOk bool
+	isO  string
 )
 
 func main() {
@@ -37,9 +38,7 @@ func main() {
 	s2 := "s2"
 	fmt.Println(s2)
 
-
 	//匿名变量
-
 
 	//注意事项
 	/*
@@ -47,6 +46,5 @@ func main() {
 		2 :=不能使用在函数外。
 		3 _多用于占位，表示忽略值。
 	*/
-
 
 }
