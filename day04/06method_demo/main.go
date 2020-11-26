@@ -1,1 +1,7 @@
-package _6method_demo
+package main
+
+import "fmt"
+
+func main()  {
+	fmt.Printf("qaa")
+}
