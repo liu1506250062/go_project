@@ -17,7 +17,6 @@ var (
 	name string
 	age  int
 	isOk bool
-	isO  string
 )
 
 func main() {
