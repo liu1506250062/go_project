@@ -11,7 +11,7 @@ import (
 func main() {
 
 	//数据库信息
-	dsn := "root:root@tcp(127.0.0.1:3306)/kwe"
+	dsn := "root:root@tcp(localhost:3306)/kwe"
 
 	// 连接数据库
 	db, err := sql.Open("mysql", dsn) // 不会校验用户名和密码是否正确
