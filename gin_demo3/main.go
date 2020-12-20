@@ -2,16 +2,47 @@ package main
 
 import (
 	"fmt"
+	"html/template"
 	"net/http"
 )
 
-
-//05  4minutes 50 5s
-
-func sayHello(w http.ResponseWriter, r *http.Request) {
-	fmt.Printf("qwe")
+type User struct {
+	Name    string
+	Gendert string
+	Age     int
 }
 
+func sayHello(w http.ResponseWriter, r *http.Request) {
+	//定义模板
+
+	//解析模板
+	t, err := template.ParseFiles("hello.tmpl")
+
+	if err != nil {
+		fmt.Printf("err : %v\n", err)
+		return
+	}
+
+	//渲染模板
+	u1 := User{
+		Name:    "小王子",
+		Gendert: "男",
+		Age:     23,
+	}
+
+	m1 := map[string]interface{}{
+		"Name":    "小王子",
+		"gendert": "男",
+		"Age":     23,
+	}
+	t.Execute(w, map[string]interface{}{
+		"m1":m1,
+		"u1":u1,
+	})
+}
+
+
+// 5
 func main() {
 	http.HandleFunc("/", sayHello)
 	err := http.ListenAndServe(":9090", nil)

@@ -1,9 +1,39 @@
-<!DOCTYPE>
-<html>
+<!DOCTYPE html>
+<html lang="zh-CN">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
     <title>Hello</title>
 </head>
 <body>
+<p>Hello {{.u1.Name}}</p>
+<p>年龄： {{.u1.Age}}</p>
+<p>性别 {{.u1.Gendert}}</p>
+
+<p>Hello {{.m1.Name}}</p>
+<p>年龄： {{.m1.Age}}</p>
+<p>性别 {{.m1.Gendert}}</p>
+
+<br>
+
+{{/*这是一个注释*/}}
+$obj := {{.m1}}
+
+{{$v := 10 }}
+{{$age := .m1.age}}
+
+{{/*条件判断*/}}
+
+<br>
+<br>
+
+{{if $v}}
+{{$v}}
+{{else}}
+    啥都不是
+{{end}}
+
 
 </body>
 </html>
