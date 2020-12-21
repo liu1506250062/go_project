@@ -48,7 +48,7 @@ func sayHello(w http.ResponseWriter, r *http.Request) {
 	})
 }
 
-// 5
+
 func main() {
 	http.HandleFunc("/", sayHello)
 	err := http.ListenAndServe(":9090", nil)
