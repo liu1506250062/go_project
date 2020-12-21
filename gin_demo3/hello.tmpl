@@ -29,11 +29,20 @@ $obj := {{.m1}}
 <br>
 
 {{if $v}}
-{{$v}}
+    {{$v}}
 {{else}}
     啥都不是
 {{end}}
 
+<br>
+<br>
+<br>
+<br>
 
+{{ range  $idx,$hobby := .hobbyList}}
+
+    <p>{{$idx}} - {{$hobby}}</p>
+
+{{end}}
 </body>
 </html>
