@@ -24,7 +24,7 @@ func initMySQL() (err error) {
 	if err != nil {
 		return
 	}
-	return DB.DB().Ping()   //返回一个错误
+	return DB.DB().Ping() //返回一个错误
 }
 
 func main() {
@@ -35,8 +35,10 @@ func main() {
 		panic(err)
 	}
 
+	defer DB.Close() //程序退出关闭数据库连接
 
 	//绑定模型
+	DB.AutoMigrate(Todo{})
 
 	r := gin.Default()
 
@@ -54,10 +56,32 @@ func main() {
 	v1Group := r.Group("v1")
 	{
 		//添加
-		v1Group.POST("/todo", func(c *gin.Context) {})
-		{
+		v1Group.POST("/todo", func(c *gin.Context) {
 
-		}
+			//前端页面填写待办事项 点击提交 会发请求到这里
+			//1 从请求中把数据中拿出来
+			var todo Todo
+			c.BindJSON(&todo)
+			//2 存入数据库
+
+			//err = DB.Create(todo).Error
+			//if err != nil {
+			//
+			//}
+
+			if err = DB.Create(&todo).Error;err != nil{
+				c.JSON(http.StatusOK,gin.H{"error":err.Error()})
+			}else {
+				c.JSON(http.StatusOK,gin.H{
+					"code":2000,
+					"msg":"success",
+					"data":todo,
+				})
+			}
+
+			//3 反回响应
+
+		})
 
 		//查看所有的待办事项
 		v1Group.GET("/todo", func(c *gin.Context) {
@@ -85,4 +109,4 @@ func main() {
 }
 
 
-// 09  44
+//22 12
