@@ -55,6 +55,7 @@ func main() {
 	//v1
 	v1Group := r.Group("v1")
 	{
+
 		//添加
 		v1Group.POST("/todo", func(c *gin.Context) {
 
@@ -69,13 +70,13 @@ func main() {
 			//
 			//}
 
-			if err = DB.Create(&todo).Error;err != nil{
-				c.JSON(http.StatusOK,gin.H{"error":err.Error()})
-			}else {
-				c.JSON(http.StatusOK,gin.H{
-					"code":2000,
-					"msg":"success",
-					"data":todo,
+			if err = DB.Create(&todo).Error; err != nil {
+				c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, gin.H{
+					"code": 2000,
+					"msg":  "success",
+					"data": todo,
 				})
 			}
 
@@ -85,7 +86,13 @@ func main() {
 
 		//查看所有的待办事项
 		v1Group.GET("/todo", func(c *gin.Context) {
-
+			//查询todo表里的数据
+			var todoList []Todo
+			if err = DB.Find(&todoList).Error; err != nil {
+				c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, todoList)
+			}
 		})
 
 		//查看某一个待办事项
@@ -96,17 +103,45 @@ func main() {
 		//修改
 		v1Group.PUT("/todo/:id", func(c *gin.Context) {
 
+			id, ok := c.Params.Get("id")
+			if !ok {
+				c.JSON(http.StatusOK, gin.H{"error": "无效的id"})
+				return
+			}
+
+			var todo Todo
+			if err = DB.Where("id = ?", id).First(&todo).Error; err != nil {
+				c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+				return
+			}
+
+			c.BindJSON(&todo)
+			if err = DB.Save(&todo).Error; err != nil {
+				c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, todo)
+			}
+
 		})
 
 		//删除
 		v1Group.DELETE("/todo/:id", func(c *gin.Context) {
+			id, ok := c.Params.Get("id")
+			if !ok {
+				c.JSON(http.StatusOK, gin.H{"error": "无效的id"})
+				return
+			}
 
+			if err = DB.Where("id = ?", id).Delete(Todo{}).Error; err != nil {
+				c.JSON(http.StatusOK, gin.H{"error": err.Error()})
+			} else {
+				c.JSON(http.StatusOK, gin.H{id: "deleted"})
+			}
 		})
 	}
 
 	r.Run(":9090")
 
 }
-
 
 //22 12
