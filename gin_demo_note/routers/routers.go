@@ -6,6 +6,7 @@ import (
 )
 
 func SetupRpoute() *gin.Engine {
+
 	r := gin.Default()
 
 	//告诉 gin 去哪里找模板文件

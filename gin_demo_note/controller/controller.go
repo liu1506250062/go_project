@@ -28,8 +28,6 @@ func CreateAtodo(c *gin.Context) {
 		})
 	}
 
-	//3 反回响应
-
 }
 
 func GetTOdoList(c *gin.Context) {
