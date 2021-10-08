@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Hello</title>
+</head>
+<body>
+<p>Hello,{{.u1.Name}}</p>
+<p>年龄,{{.u1.Age}}</p>
+<p>性别,{{.u1.Gender}}</p>
+
+<p>Hello,{{.m1.Name}}</p>
+<p>年龄,{{.m1.Age}}</p>
+<p>性别,{{.m1.Gender}}</p>
+
+{{ $v1 := 222}}
+{{ $v2 := .m1.Name}}
+
+<p>{{$v1}}</p>
+
+
+
+
+{{ range $index,$hobby := .hobby }}
+    {{$hobby}}-{{$index}} <br>
+{{ else}}
+    没啥爱好
+{{ end}}
+</body>
+</html>
