@@ -51,9 +51,18 @@ func sayhello(w http.ResponseWriter, r *http.Request) {
 
 func main() {
 	http.HandleFunc("/", sayhello)
-	err := http.ListenAndServe(":9000", nil)
+	err := http.ListenAndServe(":9000\n\n", nil)
 	if err != nil {
 		fmt.Println("Http Failed %v", err)
 		return
 	}
 }
+
+func Array(){
+	var a [10]int
+	for i:=0; i< len(a); i++ {
+		fmt.Println();
+	}
+}
+
+
