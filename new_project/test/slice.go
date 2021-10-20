@@ -18,9 +18,27 @@ func main() {
 	//}
 	//fmt.Println(a)
 
-	
-	
-	
-	
+
+
+
+
 
 }
+
+
+func twoSum(nums []int, target int) []int {
+
+	var numbers = make([]int,0)
+
+	for i := 0;i<len(nums);i++{
+		for j:=i;j<len(nums);j++{
+			if nums[i]+nums[j] == target {
+				numbers = append(numbers, i)
+				numbers = append(numbers, j)
+				return numbers
+			}
+		}
+	}
+	return numbers
+}
+
