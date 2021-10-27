@@ -5,6 +5,7 @@ import (
 	"io"
 	"net"
 	"sync"
+	"time"
 )
 
 type Server struct {
@@ -32,18 +33,17 @@ func NewServer(ip string, port int) *Server {
 }
 
 //监听Message广播消息channel的goroutine，一旦有消息就发送给全部在线的用户
-func (this *Server) ListenMessager()  {
-	for  {
+func (this *Server) ListenMessager() {
+	for {
 		msg := <-this.Message
 		//将msg发送给全部在线的User
 		this.mapLock.Lock()
-		for _,cli := range this.OnlineMap{
+		for _, cli := range this.OnlineMap {
 			cli.C <- msg
 		}
 		this.mapLock.Unlock()
 	}
 }
-
 
 //广播地址的方法
 func (this *Server) BroadCast(user *User, msg string) {
@@ -52,32 +52,29 @@ func (this *Server) BroadCast(user *User, msg string) {
 }
 
 func (this *Server) Handle(conn net.Conn) {
+
 	//当前链接的业务
 	//fmt.Println("链接建立成功")
+	user := NewUser(conn, this)
 
-	user := NewUser(conn)
+	//上线业务
+	user.Online()
 
-	//用户上线 加到onlinemap 中
-	this.mapLock.Lock()
-	this.OnlineMap[user.Name] = user
-	this.mapLock.Unlock()
-
-	//广播当前用户上线消息
-	this.BroadCast(user,"shang xian")
+	//监听用户是否活跃的channel
+	isLive := make(chan bool)
 
 	//接受用户发送来的消息
-	go func(){
-		buf :=  make([]byte,4096)
-
-		for  {
-			n,err := conn.Read(buf)
+	go func() {
+		buf := make([]byte, 4096)
+		for {
+			n, err := conn.Read(buf)
 			if n == 0 {
-				this.BroadCast(user,"xia xian")
+				user.Offline()
 				return
 			}
 
-			if err != nil && err != io.EOF{
-				fmt.Println("Conn Read err:",err)
+			if err != nil && err != io.EOF {
+				fmt.Println("Conn Read err:", err)
 				return
 			}
 
@@ -85,14 +82,35 @@ func (this *Server) Handle(conn net.Conn) {
 			msg := string(buf[:n-1])
 
 			//消息广播
-			this.BroadCast(user,msg)
-		}
+			user.DnMessage(msg)
 
+			//用户的任意消息代表一个活跃的
+			isLive <- true
+		}
 	}()
 
-
 	//当前handle阻塞
-	select {}
+	for {
+		select {
+		case <-isLive:
+			//当前用户是活跃的，重置定时器
+			//不做任何事情，为了激活select 更新下面的定时器
+		case <-time.After(time.Second * 3600):
+			//已经超时
+			//将当前的user强制的关闭
+
+			user.sendMsg("you close")
+
+			//销毁资源
+			close(user.C)
+
+			//关闭资源
+			conn.Close()
+
+			//退出
+			return //runtime.Goexit()
+		}
+	}
 
 }
 
