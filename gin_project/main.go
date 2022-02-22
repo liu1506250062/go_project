@@ -29,6 +29,7 @@ func initDB() (err error) {
 func main() {
 
 	//定义数据库的连接
+	//xmlreader
 	err := initDB() // 调用输出化数据库的函数
 	if err != nil {
 		fmt.Printf("init db failed,err:%v\n", err)
